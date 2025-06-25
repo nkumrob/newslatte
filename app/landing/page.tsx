@@ -68,8 +68,11 @@ export default function LandingPage() {
               <Link href="/editor-v2" className="text-gray-600 hover:text-gray-900">
                 Editor
               </Link>
+              <Link href="/editor-v3" className="text-gray-600 hover:text-gray-900">
+                Advanced Editor
+              </Link>
               <Link 
-                href="/editor-v2" 
+                href="/editor-v3" 
                 className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
               >
                 Get Started
