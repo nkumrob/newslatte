@@ -7,6 +7,7 @@ import { BlockEditor } from '@/components/block-editor';
 import { TemplateManager } from '@/components/template-manager';
 import { ThemePanel } from '@/components/theme-panel';
 import { BlockPreviewRenderer } from '@/components/block-preview-renderer';
+import { convertNewsletterToBlocks, extractEmailMetadata } from '@/utils/newsletter-to-blocks';
 import { 
   Save, 
   Eye, 
@@ -65,10 +66,36 @@ export default function AdvancedEditorPage() {
   });
 
   useEffect(() => {
-    // Initialize with empty newsletter
-    setLoading(false);
-    setHistory([[]]);
-    setHistoryIndex(0);
+    // Load sample newsletter data
+    console.log('Editor V3: Loading newsletter data...');
+    fetch('/sample-newsletter.json')
+      .then(res => res.json())
+      .then(data => {
+        console.log('Editor V3: Newsletter loaded, converting to blocks...');
+        setNewsletter(data);
+        
+        // Convert newsletter to blocks
+        const convertedBlocks = convertNewsletterToBlocks(data);
+        setBlocks(convertedBlocks);
+        
+        // Extract email metadata
+        const metadata = extractEmailMetadata(data);
+        setEmailSettings(metadata);
+        
+        // Initialize history
+        setHistory([convertedBlocks]);
+        setHistoryIndex(0);
+        
+        setLoading(false);
+        console.log('Editor V3: Initialized with', convertedBlocks.length, 'blocks');
+      })
+      .catch(err => {
+        console.error('Failed to load newsletter:', err);
+        setLoading(false);
+        // Initialize with empty state on error
+        setHistory([[]]);
+        setHistoryIndex(0);
+      });
   }, []);
 
   const updateBlocks = (newBlocks: ContentBlock[]) => {
@@ -195,20 +222,28 @@ export default function AdvancedEditorPage() {
   };
 
   const renderBlockAsHTML = (block: ContentBlock): string => {
-    // Simplified HTML rendering - would be expanded for each block type
-    switch (block.type) {
-      case 'text':
-        return `<div style="padding: ${theme.spacing.element};">${block.content}</div>`;
-      case 'heading':
-        return `<h${block.level} style="padding: ${theme.spacing.element};">${block.content}</h${block.level}>`;
-      case 'button':
-        return `<div style="text-align: ${block.style?.alignment || 'center'}; padding: ${theme.spacing.element};">
-          <a href="${block.url}" style="background: ${block.style?.backgroundColor}; color: ${block.style?.textColor}; padding: ${block.style?.padding}; border-radius: ${block.style?.borderRadius}; text-decoration: none; display: inline-block;">
-            ${block.text}
-          </a>
-        </div>`;
-      default:
-        return '';
+    try {
+      // Simplified HTML rendering - would be expanded for each block type
+      switch (block.type) {
+        case 'text':
+          return `<div style="padding: ${theme.spacing.element};">${block.content || ''}</div>`;
+        case 'heading':
+          const level = (block as any).level || 2;
+          const content = (block as any).content || '';
+          return `<h${level} style="padding: ${theme.spacing.element};">${content}</h${level}>`;
+        case 'button':
+          const buttonBlock = block as any;
+          return `<div style="text-align: ${buttonBlock.style?.alignment || 'center'}; padding: ${theme.spacing.element};">
+            <a href="${buttonBlock.url || '#'}" style="background: ${buttonBlock.style?.backgroundColor || theme.colors.primary}; color: ${buttonBlock.style?.textColor || '#fff'}; padding: ${buttonBlock.style?.padding || '12px 24px'}; border-radius: ${buttonBlock.style?.borderRadius || '4px'}; text-decoration: none; display: inline-block;">
+              ${buttonBlock.text || 'Button'}
+            </a>
+          </div>`;
+        default:
+          return '';
+      }
+    } catch (error) {
+      console.error('Error rendering block:', error);
+      return '';
     }
   };
 
@@ -474,11 +509,45 @@ export default function AdvancedEditorPage() {
       </div>
 
       {/* Template Manager */}
-      {showTemplateManager && newsletter && (
+      {showTemplateManager && (
         <TemplateManager
-          newsletter={newsletter}
+          newsletter={{
+            metadata: {
+              url: '',
+              extraction_timestamp: new Date().toISOString(),
+              brand: 'Newsletter',
+              title: emailSettings.subject || 'Newsletter',
+              subtitle: emailSettings.preheader || '',
+              date_sent: new Date().toISOString()
+            },
+            content: {
+              sections: [],
+              images: [],
+              links: [],
+              products: [],
+              ctas: []
+            },
+            summary: {
+              total_images: 0,
+              total_links: 0,
+              total_products: 0,
+              total_ctas: 0,
+              total_sections: 0
+            }
+          }}
           onLoad={(loaded) => {
             // Convert newsletter sections to blocks
+            const convertedBlocks = convertNewsletterToBlocks(loaded);
+            setBlocks(convertedBlocks);
+            
+            // Update email metadata
+            const metadata = extractEmailMetadata(loaded);
+            setEmailSettings(metadata);
+            
+            // Update history
+            setHistory([convertedBlocks]);
+            setHistoryIndex(0);
+            
             setShowTemplateManager(false);
           }}
           onClose={() => setShowTemplateManager(false)}
