@@ -277,6 +277,26 @@ export function BlockPreviewRenderer({ block, theme }: BlockPreviewRendererProps
         />
       );
 
+    case 'columns':
+      return (
+        <div 
+          style={{ 
+            display: 'grid',
+            gridTemplateColumns: block.columns.map(col => col.width || `${100 / block.columns.length}%`).join(' '),
+            gap: block.style?.gap || '24px',
+            padding: theme.spacing.element
+          }}
+        >
+          {block.columns.map((column, index) => (
+            <div key={index}>
+              {column.blocks.map((nestedBlock) => (
+                <BlockPreviewRenderer key={nestedBlock.id} block={nestedBlock} theme={theme} />
+              ))}
+            </div>
+          ))}
+        </div>
+      );
+
     default:
       return null;
   }

@@ -6,36 +6,44 @@ export function convertNewsletterToBlocks(newsletter: Newsletter): ContentBlock[
   const blocks: ContentBlock[] = [];
   let order = 0;
 
-  // Add hero images as image blocks
-  newsletter.content.images
-    .filter(img => img.type === 'hero')
-    .forEach((image) => {
-      blocks.push({
-        id: uuidv4(),
-        type: 'image',
-        order: order++,
-        src: image.url,
-        alt: image.alt || '',
-        style: {
-          maxWidth: '100%',
-          alignment: 'center'
-        }
-      });
-    });
+  // Nike newsletter specific layout structure:
+  // 1. First hero image
+  // 2. First section (with left-aligned content)
+  // 3. Second hero image
+  // 4. Second section (with left-aligned content)
+  // 5. Product grid (2 columns)
 
-  // Add a spacer after hero images if they exist
-  if (newsletter.content.images.filter(img => img.type === 'hero').length > 0) {
+  const heroImages = newsletter.content.images.filter(img => img.type === 'hero');
+  const productImages = newsletter.content.images.filter(img => img.type === 'product');
+
+  // Add first hero image
+  if (heroImages[0]) {
+    blocks.push({
+      id: uuidv4(),
+      type: 'image',
+      order: order++,
+      src: heroImages[0].url,
+      alt: heroImages[0].alt || '',
+      style: {
+        maxWidth: '100%',
+        alignment: 'center',
+        padding: '0'
+      }
+    });
+  }
+
+  // Add first section (Elevate His Game)
+  if (newsletter.content.sections[0]) {
+    const section = newsletter.content.sections[0];
+    
+    // Section container with padding
     blocks.push({
       id: uuidv4(),
       type: 'spacer',
       order: order++,
       height: '32px'
     });
-  }
 
-  // Convert sections to blocks
-  newsletter.content.sections.forEach((section, index) => {
-    // Add heading block
     blocks.push({
       id: uuidv4(),
       type: 'heading',
@@ -43,12 +51,13 @@ export function convertNewsletterToBlocks(newsletter: Newsletter): ContentBlock[
       content: section.title,
       level: 2,
       style: {
-        fontSize: '28px',
-        textAlign: 'left'
+        fontSize: '32px',
+        fontFamily: 'Helvetica, Arial, sans-serif',
+        textAlign: 'left',
+        color: '#111111'
       }
     });
 
-    // Add text block if description exists
     if (section.description) {
       blocks.push({
         id: uuidv4(),
@@ -57,12 +66,13 @@ export function convertNewsletterToBlocks(newsletter: Newsletter): ContentBlock[
         content: `<p>${section.description}</p>`,
         style: {
           fontSize: '16px',
-          color: '#666666'
+          lineHeight: '1.5',
+          color: '#666666',
+          textAlign: 'left'
         }
       });
     }
 
-    // Add button block if CTA exists
     if (section.cta) {
       blocks.push({
         id: uuidv4(),
@@ -73,72 +83,193 @@ export function convertNewsletterToBlocks(newsletter: Newsletter): ContentBlock[
         style: {
           backgroundColor: '#000000',
           textColor: '#ffffff',
-          borderRadius: '24px',
+          borderRadius: '30px',
           fontSize: '16px',
-          padding: '12px 24px',
-          alignment: 'left'
+          fontWeight: 'bold',
+          padding: '12px 28px',
+          alignment: 'left',
+          width: 'auto'
         }
       });
     }
 
-    // Add spacer between sections
-    if (index < newsletter.content.sections.length - 1) {
-      blocks.push({
-        id: uuidv4(),
-        type: 'spacer',
-        order: order++,
-        height: '48px'
-      });
-    }
-  });
-
-  // Add products if they exist
-  if (newsletter.content.products.length > 0) {
-    // Add divider before products
     blocks.push({
       id: uuidv4(),
-      type: 'divider',
+      type: 'spacer',
       order: order++,
+      height: '40px'
+    });
+  }
+
+  // Add second hero image
+  if (heroImages[1]) {
+    blocks.push({
+      id: uuidv4(),
+      type: 'image',
+      order: order++,
+      src: heroImages[1].url,
+      alt: heroImages[1].alt || '',
       style: {
-        borderColor: '#e5e5e5',
-        borderWidth: '1px',
-        borderStyle: 'solid',
-        margin: '48px 0'
+        maxWidth: '100%',
+        alignment: 'center',
+        padding: '0'
       }
     });
+  }
 
-    // Add products heading
+  // Add second section (Gift Card)
+  if (newsletter.content.sections[1]) {
+    const section = newsletter.content.sections[1];
+    
+    blocks.push({
+      id: uuidv4(),
+      type: 'spacer',
+      order: order++,
+      height: '32px'
+    });
+
     blocks.push({
       id: uuidv4(),
       type: 'heading',
       order: order++,
-      content: 'Featured Products',
+      content: section.title,
       level: 2,
       style: {
-        fontSize: '28px',
-        textAlign: 'center'
+        fontSize: '32px',
+        fontFamily: 'Helvetica, Arial, sans-serif',
+        textAlign: 'left',
+        color: '#111111'
       }
     });
 
-    // Add product blocks
-    newsletter.content.products.forEach((product) => {
+    if (section.description) {
       blocks.push({
         id: uuidv4(),
-        type: 'product',
+        type: 'text',
         order: order++,
-        name: product.name,
-        image: product.image,
-        description: product.description || '',
-        price: '', // Not in original data
-        link: product.link || '#',
+        content: `<p>${section.description}</p>`,
         style: {
-          layout: 'vertical',
-          backgroundColor: '#f9f9f9',
-          borderRadius: '8px',
-          padding: '16px'
+          fontSize: '16px',
+          lineHeight: '1.5',
+          color: '#666666',
+          textAlign: 'left'
         }
       });
+    }
+
+    if (section.cta) {
+      blocks.push({
+        id: uuidv4(),
+        type: 'button',
+        order: order++,
+        text: section.cta.text,
+        url: section.cta.url,
+        style: {
+          backgroundColor: '#000000',
+          textColor: '#ffffff',
+          borderRadius: '30px',
+          fontSize: '16px',
+          fontWeight: 'bold',
+          padding: '12px 28px',
+          alignment: 'left',
+          width: 'auto'
+        }
+      });
+    }
+  }
+
+  // Add products in a 2-column grid layout
+  if (newsletter.content.products.length > 0) {
+    blocks.push({
+      id: uuidv4(),
+      type: 'spacer',
+      order: order++,
+      height: '48px'
     });
+
+    // Create a columns block for the product grid
+    const productPairs: any[] = [];
+    for (let i = 0; i < newsletter.content.products.length; i += 2) {
+      const leftProduct = newsletter.content.products[i];
+      const rightProduct = newsletter.content.products[i + 1];
+      
+      const columnBlocks: ContentBlock[] = [];
+      
+      // Left column
+      columnBlocks.push({
+        blocks: [{
+          id: uuidv4(),
+          type: 'image',
+          order: 0,
+          src: leftProduct.image,
+          alt: leftProduct.name,
+          link: leftProduct.link || '#',
+          style: {
+            maxWidth: '100%',
+            alignment: 'center'
+          }
+        }, {
+          id: uuidv4(),
+          type: 'text',
+          order: 1,
+          content: `<p style="text-align: center; margin-top: 8px;">${leftProduct.name}</p>`,
+          style: {
+            fontSize: '14px',
+            textAlign: 'center'
+          }
+        }],
+        width: '50%'
+      });
+      
+      // Right column (if exists)
+      if (rightProduct) {
+        columnBlocks.push({
+          blocks: [{
+            id: uuidv4(),
+            type: 'image',
+            order: 0,
+            src: rightProduct.image,
+            alt: rightProduct.name,
+            link: rightProduct.link || '#',
+            style: {
+              maxWidth: '100%',
+              alignment: 'center'
+            }
+          }, {
+            id: uuidv4(),
+            type: 'text',
+            order: 1,
+            content: `<p style="text-align: center; margin-top: 8px;">${rightProduct.name}</p>`,
+            style: {
+              fontSize: '14px',
+              textAlign: 'center'
+            }
+          }],
+          width: '50%'
+        });
+      }
+      
+      blocks.push({
+        id: uuidv4(),
+        type: 'columns',
+        order: order++,
+        columns: columnBlocks,
+        style: {
+          gap: '16px',
+          stackOnMobile: true
+        }
+      });
+      
+      // Add spacing between product rows
+      if (i + 2 < newsletter.content.products.length) {
+        blocks.push({
+          id: uuidv4(),
+          type: 'spacer',
+          order: order++,
+          height: '24px'
+        });
+      }
+    }
   }
 
   return blocks;

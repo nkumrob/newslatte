@@ -16,6 +16,7 @@ import { SocialBlockEditor } from './blocks/social-block-editor';
 import { VideoBlockEditor } from './blocks/video-block-editor';
 import { QuoteBlockEditor } from './blocks/quote-block-editor';
 import { HtmlBlockEditor } from './blocks/html-block-editor';
+import { ColumnsBlockEditor } from './blocks/columns-block-editor';
 import { AddBlockMenu } from './add-block-menu';
 import { BlockType } from '@/types/blocks';
 import { useState } from 'react';
@@ -70,8 +71,7 @@ export function BlockRenderer({ block, onUpdate, onDelete, onDuplicate, onAddBlo
       case 'html':
         return <HtmlBlockEditor block={block} onUpdate={onUpdate} />;
       case 'columns':
-        // Columns block will be implemented separately due to complexity
-        return <div>Columns block (coming soon)</div>;
+        return <ColumnsBlockEditor block={block} onUpdate={onUpdate} />;
       default:
         return <div>Unknown block type</div>;
     }
