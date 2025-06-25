@@ -40,19 +40,19 @@ export default function AdvancedEditorPage() {
   const [showThemePanel, setShowThemePanel] = useState(false);
   const [theme, setTheme] = useState({
     colors: {
-      primary: '#000000',
-      secondary: '#666666',
+      primary: '#253b48',
+      secondary: '#40505a',
       background: '#ffffff',
-      text: '#333333',
-      accent: '#0066cc'
+      text: '#2d4156',
+      accent: '#253b48'
     },
     fonts: {
-      heading: 'Georgia, serif',
-      body: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
+      heading: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif',
+      body: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif'
     },
     spacing: {
-      section: '32px',
-      element: '16px'
+      section: '1.4em',
+      element: '1.3em'
     }
   });
 

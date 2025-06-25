@@ -41,7 +41,7 @@ export function convertNewsletterToBlocks(newsletter: Newsletter): ContentBlock[
       id: uuidv4(),
       type: 'spacer',
       order: order++,
-      height: '32px'
+      height: '2em'
     });
 
     blocks.push({
@@ -51,10 +51,11 @@ export function convertNewsletterToBlocks(newsletter: Newsletter): ContentBlock[
       content: section.title,
       level: 2,
       style: {
-        fontSize: '32px',
-        fontFamily: 'Helvetica, Arial, sans-serif',
+        fontSize: '1.05em',
+        fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif',
         textAlign: 'left',
-        color: '#111111'
+        color: '#2d4156',
+        fontWeight: '400'
       }
     });
 
@@ -65,10 +66,11 @@ export function convertNewsletterToBlocks(newsletter: Newsletter): ContentBlock[
         order: order++,
         content: `<p>${section.description}</p>`,
         style: {
-          fontSize: '16px',
-          lineHeight: '1.5',
-          color: '#666666',
-          textAlign: 'left'
+          fontSize: '0.9em',
+          lineHeight: '1.5em',
+          color: '#40505a',
+          textAlign: 'left',
+          fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif'
         }
       });
     }
@@ -81,14 +83,15 @@ export function convertNewsletterToBlocks(newsletter: Newsletter): ContentBlock[
         text: section.cta.text,
         url: section.cta.url,
         style: {
-          backgroundColor: '#000000',
+          backgroundColor: '#253b48',
           textColor: '#ffffff',
-          borderRadius: '30px',
-          fontSize: '16px',
-          fontWeight: 'bold',
-          padding: '12px 28px',
+          borderRadius: '4px',
+          fontSize: '0.82em',
+          fontWeight: '400',
+          padding: '1em 1.7em',
           alignment: 'left',
-          width: 'auto'
+          width: 'auto',
+          fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif'
         }
       });
     }
@@ -97,7 +100,7 @@ export function convertNewsletterToBlocks(newsletter: Newsletter): ContentBlock[
       id: uuidv4(),
       type: 'spacer',
       order: order++,
-      height: '40px'
+      height: '2.5em'
     });
   }
 
@@ -125,7 +128,7 @@ export function convertNewsletterToBlocks(newsletter: Newsletter): ContentBlock[
       id: uuidv4(),
       type: 'spacer',
       order: order++,
-      height: '32px'
+      height: '2em'
     });
 
     blocks.push({
@@ -135,10 +138,11 @@ export function convertNewsletterToBlocks(newsletter: Newsletter): ContentBlock[
       content: section.title,
       level: 2,
       style: {
-        fontSize: '32px',
-        fontFamily: 'Helvetica, Arial, sans-serif',
+        fontSize: '1.05em',
+        fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif',
         textAlign: 'left',
-        color: '#111111'
+        color: '#2d4156',
+        fontWeight: '400'
       }
     });
 
@@ -149,10 +153,11 @@ export function convertNewsletterToBlocks(newsletter: Newsletter): ContentBlock[
         order: order++,
         content: `<p>${section.description}</p>`,
         style: {
-          fontSize: '16px',
-          lineHeight: '1.5',
-          color: '#666666',
-          textAlign: 'left'
+          fontSize: '0.9em',
+          lineHeight: '1.5em',
+          color: '#40505a',
+          textAlign: 'left',
+          fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif'
         }
       });
     }
@@ -165,14 +170,15 @@ export function convertNewsletterToBlocks(newsletter: Newsletter): ContentBlock[
         text: section.cta.text,
         url: section.cta.url,
         style: {
-          backgroundColor: '#000000',
+          backgroundColor: '#253b48',
           textColor: '#ffffff',
-          borderRadius: '30px',
-          fontSize: '16px',
-          fontWeight: 'bold',
-          padding: '12px 28px',
+          borderRadius: '4px',
+          fontSize: '0.82em',
+          fontWeight: '400',
+          padding: '1em 1.7em',
           alignment: 'left',
-          width: 'auto'
+          width: 'auto',
+          fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif'
         }
       });
     }
@@ -184,7 +190,7 @@ export function convertNewsletterToBlocks(newsletter: Newsletter): ContentBlock[
       id: uuidv4(),
       type: 'spacer',
       order: order++,
-      height: '48px'
+      height: '3em'
     });
 
     // Create a columns block for the product grid
@@ -214,8 +220,10 @@ export function convertNewsletterToBlocks(newsletter: Newsletter): ContentBlock[
           order: 1,
           content: `<p style="text-align: center; margin-top: 8px;">${leftProduct.name}</p>`,
           style: {
-            fontSize: '14px',
-            textAlign: 'center'
+            fontSize: '0.9em',
+            textAlign: 'center',
+            color: '#2d4156',
+            fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif'
           }
         }],
         width: '50%'
@@ -266,7 +274,7 @@ export function convertNewsletterToBlocks(newsletter: Newsletter): ContentBlock[
           id: uuidv4(),
           type: 'spacer',
           order: order++,
-          height: '24px'
+          height: '1.5em'
         });
       }
     }
